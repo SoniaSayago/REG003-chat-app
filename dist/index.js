@@ -11,5 +11,4 @@ http_1.default.createServer(function (request, response) {
     response.write("Heroku world!");
     response.end();
 }).listen(process.env.PORT);
-console.log(process.env.PORT);
 //# sourceMappingURL=index.js.map
