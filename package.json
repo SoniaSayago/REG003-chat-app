@@ -10,7 +10,6 @@
     "db-status": "docker-compose ps",
     "db-down": "docker-compose down",
     "build": "tsc"
-
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -18,6 +17,7 @@
     "typescript": "^4.3.5"
   },
   "devDependencies": {
+    "@types/express": "^4.17.13",
     "@types/node": "^16.7.1",
     "dotenv": "^10.0.0",
     "eslint": "^7.30.0",
