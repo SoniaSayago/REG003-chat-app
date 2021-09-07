@@ -23,6 +23,7 @@ export const expressApp:Application = express();
 //     res.send("Hello World!");
 // });
 
+
 // Registrar rutas
 routes(expressApp, (err: string) => {
   if (err) {
