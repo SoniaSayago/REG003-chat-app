@@ -1,10 +1,10 @@
 import auth from "./auth";
 import express from "express";
 import { Request, Response, NextFunction } from 'express';
+import {name, version} from "../config"
 
 const root = (app: express.Application, next: any) => {
-  const pkg = app.get('pkg');
-  app.get('/', (req:Request, res:Response) => res.json({ name: pkg.name, version: pkg.version }));
+  app.get('/', (req:Request, res:Response) => res.json({ name: name, version: version }));
   app.all('*', (req:Request, res:Response, nextAll) => nextAll(404));
   return next();
 };

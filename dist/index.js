@@ -3,26 +3,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var pg_1 = require("pg");
-var dotenv_1 = __importDefault(require("dotenv"));
+exports.expressApp = void 0;
+// import {Pool} from "pg";
+var routes_1 = __importDefault(require("./routes"));
 var express_1 = __importDefault(require("express"));
-dotenv_1.default.config();
-var connectionString = process.env.DATABASE_URL;
-// conf. de api PosgreSQL
-var pool = new pg_1.Pool({
-    connectionString: connectionString
-});
-pool.query('SELECT NOW()', function (err, res) {
-    console.log(err, res);
-    pool.end();
-});
+var config_1 = require("./config");
+var error_1 = __importDefault(require("./middleware/error"));
+// const connectionString = process.env.DATABASE_URL 
+// // conf. de api PosgreSQL
+// const pool = new Pool({
+//   connectionString
+// })
+// pool.query('SELECT NOW()', (err, res) => {
+//   console.log(err, res)
+//   pool.end()
+// })
 // Conf. de servidor
-var expressApp = express_1.default();
-var port = process.env.PORT || 3000;
-expressApp.get("/", function (req, res) {
-    res.send("Hello World!");
-});
-expressApp.listen(port, function () {
-    console.log("Listening on port " + port);
+exports.expressApp = express_1.default();
+// expressApp.get("/", (req, res) => {
+//     res.send("Hello World!");
+// });
+// Registrar rutas
+routes_1.default(exports.expressApp, function (err) {
+    if (err) {
+        throw err;
+    }
+    exports.expressApp.use(error_1.default);
+    exports.expressApp.listen(config_1.port, function () {
+        console.info("App listening on port " + config_1.port);
+    });
 });
 //# sourceMappingURL=index.js.map

@@ -16,6 +16,7 @@ import errorHandler from './middleware/error';
 //   pool.end()
 // })
 
+
 // Conf. de servidor
 export const expressApp:Application = express();
 

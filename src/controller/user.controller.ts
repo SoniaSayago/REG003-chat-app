@@ -1,4 +1,4 @@
-import { createUser, getUsers, deleteUserByName, getUserByName, updateUserByName } from,  } from '../services/users'
+import { createUser, getUsers, deleteUserByName, getUserByName, updateUserByName } from '../services/users'
 import { Request, Response, NextFunction } from 'express';
 
 // GET '/users'
