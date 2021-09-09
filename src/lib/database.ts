@@ -18,17 +18,17 @@ CREATE TABLE IF NOT EXISTS users (
   password VARCHAR(255) NOT NULL,
 );
 `
-// connection using created pool
-pool.connect(function(err, client, done) {
-  client.query(createTableText)
-  done()
-})
 
 pool.on('connect', () => {
   console.log('DB connected succesfully !');
 });
 
-pool.query(createTableText);
+pool.query(createTableText).then(() => {
+  console.log('table is created successfully')
+})
+.catch(() => {
+  console.log('table is not created')
+});
 
 export default async (texto: string, params: string[]) => {
   // await pool.query("SET search_path TO 'chatSchema';");
