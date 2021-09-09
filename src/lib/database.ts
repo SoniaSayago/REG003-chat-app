@@ -26,8 +26,9 @@ pool.on('connect', () => {
 pool.query(createTableText).then(() => {
   console.log('table is created successfully')
 })
-.catch(() => {
+.catch((error) => {
   console.log('table is not created')
+  console.log(error)
 });
 
 export default async (texto: string, params: string[]) => {
