@@ -1,17 +1,10 @@
-// import { createUser, getUsers} from '../services/users'
 import { Request, Response, NextFunction } from 'express';
-import db from "../lib/database"
-import { QueryResult } from 'pg';
-
-interface NewUser {
-     name?: string, password?: string, email?: string
-  }
+import db from "../lib/database";
 
 // GET '/users'
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const response = await db('SELECT * FROM users', []);
-
     return res.status(200).json(response.rows);
   } catch (err: any) {
     console.log(err);
@@ -62,23 +55,18 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 
 // // POST '/users'
 
-// const newUser = async (req:Request, resp:Response, next: NextFunction) => {
-//   try {
-//     const { name, email, password } = req.body
-//     const newUser = await createUser(name, email, password);
-//     console.log(newUser);
-//     resp.status(200).json(
-//       {
-//         // _id: newUser.name,
-//         // email: newUser.email,
-//         // password: newUser.password,
-//         message: 'User created successfully',
-//       },
-//     );
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+export const newUser = async (req:Request, res:Response, next: NextFunction) => {
+  try {
+    const { name, email, password } = req.body
+    const response = await db('INSERT INTO users(name, email, password) VALUES($1, $2, $3) RETURNING *', [name, email, password]);
+    return res.status(201).json(response.rows);
+  } catch (err) {
+    next({
+      statusCode: err?.statusCode || 500,
+      message: err?.message || 'Opps! Something went wrong.',
+    });
+  }
+};
 
 // // PUT '/users/:uid'
 
@@ -116,10 +104,4 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 //   }
 // };
 
-// export{
-//   getUsers,
-//   newUser,
-//   // updateUser,
-//   // getOneUser,
-//   // deleteOneUser,
-// };
+
