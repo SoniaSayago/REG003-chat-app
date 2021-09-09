@@ -18,6 +18,12 @@ CREATE TABLE IF NOT EXISTS users (
   password VARCHAR(255) NOT NULL,
 );
 `
+// connection using created pool
+pool.connect(function(err, client, done) {
+  client.query(createTableText)
+  done()
+})
+
 pool.on('connect', () => {
   console.log('DB connected succesfully !');
 });
