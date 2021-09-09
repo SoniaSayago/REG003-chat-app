@@ -26,11 +26,10 @@ export const expressApp:Application = express();
 
 
 // Registrar rutas
-routes(expressApp, (err: string) => {
+routes(expressApp, (err: any) => {
   if (err) {
     throw err;
   }
-
   expressApp.use(errorHandler);
   expressApp.listen(port, () => {
     console.info(`App listening on port ${port}`);

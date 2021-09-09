@@ -1,10 +1,31 @@
-import { createUser, getUsers, deleteUserByName, getUserByName, updateUserByName } from '../services/users'
+// import { createUser, getUsers} from '../services/users'
 import { Request, Response, NextFunction } from 'express';
+import db from "../lib/database"
+import { QueryResult } from 'pg';
+
+interface NewUser {
+     name?: string, password?: string, email?: string
+  }
 
 // GET '/users'
-export const getUsersController = async (req:Request, res:Response, next: NextFunction) => {
+export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const users = await getUsers();
+    const response = await db('SELECT * FROM users', []);
+
+    return res.status(200).json(response.rows);
+  } catch (err: any) {
+    console.log(err);
+
+    next({
+      statusCode: err?.statusCode || 500,
+      message: err?.message || 'Opps! Something went wrong.',
+    });
+  }
+};
+
+// export const getUsersController = async (req:Request, res:Response, next: NextFunction) => {
+//   try {
+//     const users = await getUsers();
     // const listUser = [];
     // users.forEach((user) => {
     //   listUser.push({
@@ -14,11 +35,11 @@ export const getUsersController = async (req:Request, res:Response, next: NextFu
     //     roles: user.roles,
     //   });
     // });
-    res.status(200).json(users);
-  } catch (err) {
-    next({statusCode:500, message:err.message || 'Ups, have a problem with your request'});
-  }
-};
+//     res.status(200).json(users);
+//   } catch (err) {
+//     next({statusCode:500, message:err.message || 'Ups, have a problem with your request'});
+//   }
+// };
 
 //   app.get('/users', requireAdmin, getUsers);
 // GET '/users/:uid'
@@ -43,14 +64,15 @@ export const getUsersController = async (req:Request, res:Response, next: NextFu
 
 // const newUser = async (req:Request, resp:Response, next: NextFunction) => {
 //   try {
-//     const newUser = new User(req.body);
-//     const user = await newUser.save(newUser);
-//     res.status(200).json(
+//     const { name, email, password } = req.body
+//     const newUser = await createUser(name, email, password);
+//     console.log(newUser);
+//     resp.status(200).json(
 //       {
-//         _id: user._id,
-//         email: user.email,
-//         password: user.password,
-//         roles: user.roles,
+//         // _id: newUser.name,
+//         // email: newUser.email,
+//         // password: newUser.password,
+//         message: 'User created successfully',
 //       },
 //     );
 //   } catch (err) {
@@ -94,10 +116,10 @@ export const getUsersController = async (req:Request, res:Response, next: NextFu
 //   }
 // };
 
-// module.exports = {
+// export{
 //   getUsers,
 //   newUser,
-//   updateUser,
-//   getOneUser,
-//   deleteOneUser,
+//   // updateUser,
+//   // getOneUser,
+//   // deleteOneUser,
 // };

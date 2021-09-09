@@ -7,7 +7,22 @@ const pool = new Pool({
   connectionString
 })
 
-export default (texto: string, params: string[]) => {
+const createTableText = `
+CREATE TABLE IF NOT EXISTS users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+);
+`
+pool.on('connect', () => {
+  console.log('DB connected succesfully !');
+});
+
+pool.query(createTableText);
+
+export default async (texto: string, params: string[]) => {
+  // await pool.query("SET search_path TO 'chatSchema';");
   return pool.query(texto, params) 
 }
 

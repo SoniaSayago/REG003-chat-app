@@ -35,39 +35,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUsersController = void 0;
-var users_1 = require("../services/users");
+exports.getUsers = void 0;
+var database_1 = __importDefault(require("../lib/database"));
 // GET '/users'
-var getUsersController = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var users, err_1;
+var getUsers = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, users_1.getUsers()];
+                return [4 /*yield*/, database_1.default('SELECT * FROM users', [])];
             case 1:
-                users = _a.sent();
-                // const listUser = [];
-                // users.forEach((user) => {
-                //   listUser.push({
-                //     _id: user._id,
-                //     email: user.email,
-                //     password: user.password,
-                //     roles: user.roles,
-                //   });
-                // });
-                res.status(200).json(users);
-                return [3 /*break*/, 3];
+                response = _a.sent();
+                return [2 /*return*/, res.status(200).json(response.rows)];
             case 2:
                 err_1 = _a.sent();
-                next({ statusCode: 500, message: err_1.message || 'Ups, have a problem with your request' });
+                console.log(err_1);
+                next({
+                    statusCode: (err_1 === null || err_1 === void 0 ? void 0 : err_1.statusCode) || 500,
+                    message: (err_1 === null || err_1 === void 0 ? void 0 : err_1.message) || 'Opps! Something went wrong.',
+                });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
-exports.getUsersController = getUsersController;
+exports.getUsers = getUsers;
+// export const getUsersController = async (req:Request, res:Response, next: NextFunction) => {
+//   try {
+//     const users = await getUsers();
+// const listUser = [];
+// users.forEach((user) => {
+//   listUser.push({
+//     _id: user._id,
+//     email: user.email,
+//     password: user.password,
+//     roles: user.roles,
+//   });
+// });
+//     res.status(200).json(users);
+//   } catch (err) {
+//     next({statusCode:500, message:err.message || 'Ups, have a problem with your request'});
+//   }
+// };
 //   app.get('/users', requireAdmin, getUsers);
 // GET '/users/:uid'
 // const getOneUser = async (req:Request, resp:Response, next: NextFunction) => {
@@ -88,14 +102,15 @@ exports.getUsersController = getUsersController;
 // // POST '/users'
 // const newUser = async (req:Request, resp:Response, next: NextFunction) => {
 //   try {
-//     const newUser = new User(req.body);
-//     const user = await newUser.save(newUser);
-//     res.status(200).json(
+//     const { name, email, password } = req.body
+//     const newUser = await createUser(name, email, password);
+//     console.log(newUser);
+//     resp.status(200).json(
 //       {
-//         _id: user._id,
-//         email: user.email,
-//         password: user.password,
-//         roles: user.roles,
+//         // _id: newUser.name,
+//         // email: newUser.email,
+//         // password: newUser.password,
+//         message: 'User created successfully',
 //       },
 //     );
 //   } catch (err) {
@@ -132,11 +147,11 @@ exports.getUsersController = getUsersController;
 //     next(err);
 //   }
 // };
-// module.exports = {
+// export{
 //   getUsers,
 //   newUser,
-//   updateUser,
-//   getOneUser,
-//   deleteOneUser,
+//   // updateUser,
+//   // getOneUser,
+//   // deleteOneUser,
 // };
 //# sourceMappingURL=user.controller.js.map
