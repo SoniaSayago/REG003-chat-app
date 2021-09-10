@@ -55,7 +55,8 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 
 // // POST '/users'
 
-export const newUser = async (req:Request, res:Response, next: NextFunction) => {
+export const newUser = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req, "FALLOOOO");
   try {
     const { name, email, password } = req.body
     const response = await db('INSERT INTO users(name, email, password) VALUES($1, $2, $3) RETURNING *', [name, email, password]);

@@ -5,9 +5,9 @@ const connectionString = process.env.DATABASE_URL
 // conf. de api PosgreSQL
 const pool = new Pool({
   connectionString,
-  ssl: {
-    rejectUnauthorized : false,
-  }
+  // ssl: {
+  //   rejectUnauthorized : false,
+  // }
 })
 
 const createTableText = `

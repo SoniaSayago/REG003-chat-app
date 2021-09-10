@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUsers = void 0;
+exports.newUser = exports.getUsers = void 0;
 var database_1 = __importDefault(require("../lib/database"));
 // GET '/users'
 var getUsers = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
@@ -100,23 +100,32 @@ exports.getUsers = getUsers;
 //   }
 // };
 // // POST '/users'
-// const newUser = async (req:Request, resp:Response, next: NextFunction) => {
-//   try {
-//     const { name, email, password } = req.body
-//     const newUser = await createUser(name, email, password);
-//     console.log(newUser);
-//     resp.status(200).json(
-//       {
-//         // _id: newUser.name,
-//         // email: newUser.email,
-//         // password: newUser.password,
-//         message: 'User created successfully',
-//       },
-//     );
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+var newUser = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, name_1, email, password, response, err_2;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                console.log(req, "FALLOOOO");
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 3, , 4]);
+                _a = req.body, name_1 = _a.name, email = _a.email, password = _a.password;
+                return [4 /*yield*/, database_1.default('INSERT INTO users(name, email, password) VALUES($1, $2, $3) RETURNING *', [name_1, email, password])];
+            case 2:
+                response = _b.sent();
+                return [2 /*return*/, res.status(201).json(response.rows)];
+            case 3:
+                err_2 = _b.sent();
+                next({
+                    statusCode: (err_2 === null || err_2 === void 0 ? void 0 : err_2.statusCode) || 500,
+                    message: (err_2 === null || err_2 === void 0 ? void 0 : err_2.message) || 'Opps! Something went wrong.',
+                });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.newUser = newUser;
 // // PUT '/users/:uid'
 // const updateUser = async (req:Request, resp:Response, next: NextFunction) => {
 //   try {
@@ -146,12 +155,5 @@ exports.getUsers = getUsers;
 //     res.status(400).json(`Error: ${err}`);
 //     next(err);
 //   }
-// };
-// export{
-//   getUsers,
-//   newUser,
-//   // updateUser,
-//   // getOneUser,
-//   // deleteOneUser,
 // };
 //# sourceMappingURL=user.controller.js.map

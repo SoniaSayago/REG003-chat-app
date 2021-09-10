@@ -1,6 +1,6 @@
 // import {Pool} from "pg";
 import routes from "./routes";
-import express, {Application} from "express";
+import express, {Application, json} from "express";
 import { port } from './config';
 import errorHandler from './middleware/error';
 
@@ -19,6 +19,7 @@ import errorHandler from './middleware/error';
 
 // Conf. de servidor
 export const expressApp:Application = express();
+expressApp.use(json());
 
 // expressApp.get("/", (req, res) => {
 //     res.send("Hello World!");

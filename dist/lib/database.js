@@ -40,13 +40,22 @@ var pg_1 = require("pg");
 var connectionString = process.env.DATABASE_URL;
 // conf. de api PosgreSQL
 var pool = new pg_1.Pool({
-    connectionString: connectionString
+    connectionString: connectionString,
+    // ssl: {
+    //   rejectUnauthorized : false,
+    // }
 });
-var createTableText = "\nCREATE TABLE IF NOT EXISTS users (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  name VARCHAR(255) NOT NULL,\n  email VARCHAR(255) NOT NULL,\n  password VARCHAR(255) NOT NULL,\n);\n";
+var createTableText = "\nCREATE TABLE IF NOT EXISTS users (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  name VARCHAR(255) NOT NULL,\n  email VARCHAR(255) NOT NULL,\n  password VARCHAR(255) NOT NULL\n);\n";
 pool.on('connect', function () {
     console.log('DB connected succesfully !');
 });
-pool.query(createTableText);
+pool.query(createTableText).then(function () {
+    console.log('table is created successfully');
+})
+    .catch(function (error) {
+    console.log('table is not created');
+    console.log(error);
+});
 exports.default = (function (texto, params) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         // await pool.query("SET search_path TO 'chatSchema';");
