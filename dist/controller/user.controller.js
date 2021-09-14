@@ -35,11 +35,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newUser = exports.getUsers = void 0;
+exports.newUser = exports.getOneUser = exports.getUsers = void 0;
 var database_1 = __importDefault(require("../lib/database"));
 // GET '/users'
 var getUsers = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
@@ -84,44 +95,57 @@ exports.getUsers = getUsers;
 // };
 //   app.get('/users', requireAdmin, getUsers);
 // GET '/users/:uid'
-// const getOneUser = async (req:Request, resp:Response, next: NextFunction) => {
-//   try {
-//     const user = await User.findOne({ _id: req.params.uid });
-//     res.status(200).json(
-//       {
-//         _id: user._id,
-//         email: user.email,
-//         password: user.password,
-//         roles: user.roles,
-//       },
-//     );
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-// // POST '/users'
-var newUser = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, name_1, email, password, response, err_2;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+var getOneUser = function (req, resp, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, email, psw, response, _b, password, user, err_2;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
-                console.log(req, "FALLOOOO");
-                _b.label = 1;
+                _c.trys.push([0, 2, , 3]);
+                _a = req.body, email = _a.email, psw = _a.password;
+                return [4 /*yield*/, database_1.default('SELECT * FROM users WHERE email=$1', [email])];
             case 1:
-                _b.trys.push([1, 3, , 4]);
-                _a = req.body, name_1 = _a.name, email = _a.email, password = _a.password;
-                return [4 /*yield*/, database_1.default('INSERT INTO users(name, email, password) VALUES($1, $2, $3) RETURNING *', [name_1, email, password])];
+                response = _c.sent();
+                if (response.rows.length === 0) {
+                    return [2 /*return*/, next(404)];
+                }
+                _b = response.rows[0], password = _b.password, user = __rest(_b, ["password"]);
+                console.log(user);
+                if (password !== psw)
+                    return [2 /*return*/, next(403)];
+                return [2 /*return*/, resp.status(200).json(user)];
             case 2:
-                response = _b.sent();
-                return [2 /*return*/, res.status(201).json(response.rows)];
-            case 3:
-                err_2 = _b.sent();
+                err_2 = _c.sent();
+                console.log(err_2);
                 next({
                     statusCode: (err_2 === null || err_2 === void 0 ? void 0 : err_2.statusCode) || 500,
                     message: (err_2 === null || err_2 === void 0 ? void 0 : err_2.message) || 'Opps! Something went wrong.',
                 });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getOneUser = getOneUser;
+// // POST '/users'
+var newUser = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, name_1, email, password, response, err_3;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _b.trys.push([0, 2, , 3]);
+                _a = req.body, name_1 = _a.name, email = _a.email, password = _a.password;
+                return [4 /*yield*/, database_1.default('INSERT INTO users(name, email, password) VALUES($1, $2, $3) RETURNING *', [name_1, email, password])];
+            case 1:
+                response = _b.sent();
+                return [2 /*return*/, res.status(201).json(response.rows)];
+            case 2:
+                err_3 = _b.sent();
+                next({
+                    statusCode: (err_3 === null || err_3 === void 0 ? void 0 : err_3.statusCode) || 500,
+                    message: (err_3 === null || err_3 === void 0 ? void 0 : err_3.message) || 'Opps! Something went wrong.',
+                });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };

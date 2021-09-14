@@ -35,28 +35,33 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 // };
 
 //   app.get('/users', requireAdmin, getUsers);
-// GET '/users/:uid'
 
-// const getOneUser = async (req:Request, resp:Response, next: NextFunction) => {
-//   try {
-//     const user = await User.findOne({ _id: req.params.uid });
-//     res.status(200).json(
-//       {
-//         _id: user._id,
-//         email: user.email,
-//         password: user.password,
-//         roles: user.roles,
-//       },
-//     );
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+// GET '/users/:uid'
+export const getOneUser = async (req:Request, resp:Response, next: NextFunction) => {
+  try {
+    const { email, password: psw } = req.body
+    const response = await db('SELECT * FROM users WHERE email=$1', [email]);
+    if (response.rows.length === 0) {
+      return next(404);
+    }
+    
+    const { password, ...user } = response.rows[0];
+
+    if (password !== psw) return next(403);
+
+    return resp.status(200).json(user);
+  } catch (err: any) {
+    console.log(err);
+    next({
+      statusCode: err?.statusCode || 500,
+      message: err?.message || 'Opps! Something went wrong.',
+    });
+  }
+};
 
 // // POST '/users'
 
 export const newUser = async (req: Request, res: Response, next: NextFunction) => {
-  console.log(req, "FALLOOOO");
   try {
     const { name, email, password } = req.body
     const response = await db('INSERT INTO users(name, email, password) VALUES($1, $2, $3) RETURNING *', [name, email, password]);
